@@ -1,0 +1,28 @@
+{
+  "executadoEm": "2026-10-08T21:52:56.028Z",
+  "ferramenta": "Playwright APIRequestContext",
+  "metodo": "POST",
+  "endpoint": "/api/carrinho/calcular",
+  "url": "https://verzel-store.qa-test-verzel-store.workers.dev/api/carrinho/calcular",
+  "requisicao": {
+    "itens": [
+      {
+        "produtoId": "P001",
+        "quantidade": 1
+      },
+      {
+        "produtoId": "P001",
+        "quantidade": 1
+      }
+    ]
+  },
+  "status": 422,
+  "contentType": "application/json; charset=utf-8",
+  "resposta": {
+    "erro": {
+      "codigo": "ITEM_DUPLICADO",
+      "mensagem": "O produto P001 aparece mais de uma vez.",
+      "campo": "itens[1].produtoId"
+    }
+  }
+}

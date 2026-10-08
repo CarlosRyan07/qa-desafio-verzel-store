@@ -1,0 +1,89 @@
+{
+  "executadoEm": "2026-10-08T21:36:31.271Z",
+  "fuso": "America/Sao_Paulo (UTC−03:00)",
+  "executor": "Script de verificação com Playwright/Chromium",
+  "ambiente": "https://verzel-store.qa-test-verzel-store.workers.dev",
+  "massa": {
+    "produtoId": "P001",
+    "quantidade": 1,
+    "cupomRestaurado": "VERAO2026",
+    "cliente": {
+      "nome": "Maria Silva",
+      "email": "maria@example.com",
+      "cep": "01310-100"
+    }
+  },
+  "preparacao": "sessionStorage.setItem('verzel-store:cupom', JSON.stringify('VERAO2026')) seguido de recarga",
+  "esperado": "Cupom expirado não deve aparecer como aplicado; desconto zero; pedido rejeitado com CUPOM_EXPIRADO.",
+  "observado": {
+    "calculo": {
+      "metodo": "POST",
+      "url": "https://verzel-store.qa-test-verzel-store.workers.dev/api/carrinho/calcular",
+      "requisicao": {
+        "itens": [
+          {
+            "produtoId": "P001",
+            "quantidade": 1
+          }
+        ],
+        "cupom": "VERAO2026"
+      },
+      "status": 200,
+      "resposta": {
+        "itens": [
+          {
+            "produtoId": "P001",
+            "nome": "Camiseta Essencial",
+            "precoUnitario": 59.9,
+            "quantidade": 1,
+            "total": 59.9
+          }
+        ],
+        "subtotal": 59.9,
+        "desconto": 0,
+        "frete": 19.9,
+        "freteGratis": false,
+        "valorFaltanteFreteGratis": 140.1,
+        "total": 79.8,
+        "cupom": {
+          "codigo": "VERAO2026",
+          "aplicado": false,
+          "mensagem": "Cupom expirado."
+        }
+      }
+    },
+    "carrinho": "Cupom VERAO2026 aplicado.\n\nRemover cupom",
+    "pedido": {
+      "metodo": "POST",
+      "url": "https://verzel-store.qa-test-verzel-store.workers.dev/api/pedidos",
+      "requisicao": {
+        "cliente": {
+          "nome": "Maria Silva",
+          "email": "maria@example.com",
+          "cep": "01310-100"
+        },
+        "itens": [
+          {
+            "produtoId": "P001",
+            "quantidade": 1
+          }
+        ],
+        "cupom": "VERAO2026"
+      },
+      "status": 422,
+      "resposta": {
+        "erro": {
+          "codigo": "CUPOM_EXPIRADO",
+          "mensagem": "Cupom expirado.",
+          "campo": "cupom"
+        }
+      }
+    },
+    "checkout": "Cupom expirado."
+  },
+  "evidencias": [
+    "cupom-expirado-carrinho.png",
+    "cupom-expirado-checkout.png"
+  ],
+  "resultado": "Inconsistência de interface reproduzida no estado de sessão simulado; API não aplicou desconto e rejeitou o pedido."
+}

@@ -1,0 +1,16 @@
+{
+  "executadoEm": "2026-10-08T21:52:55.004Z",
+  "ferramenta": "Playwright APIRequestContext",
+  "metodo": "GET",
+  "endpoint": "/api/pedidos",
+  "url": "https://verzel-store.qa-test-verzel-store.workers.dev/api/pedidos",
+  "requisicao": null,
+  "status": 405,
+  "contentType": "application/json; charset=utf-8",
+  "resposta": {
+    "erro": {
+      "codigo": "METODO_NAO_PERMITIDO",
+      "mensagem": "O método GET não é permitido nesta rota."
+    }
+  }
+}

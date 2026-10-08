@@ -1,0 +1,42 @@
+{
+  "executadoEm": "2026-10-08T21:52:56.515Z",
+  "ferramenta": "Playwright APIRequestContext",
+  "metodo": "POST",
+  "endpoint": "/api/pedidos",
+  "url": "https://verzel-store.qa-test-verzel-store.workers.dev/api/pedidos",
+  "requisicao": {
+    "cliente": {
+      "nome": "Maria",
+      "email": "email-invalido",
+      "cep": "123"
+    },
+    "itens": [
+      {
+        "produtoId": "P005",
+        "quantidade": 1
+      }
+    ]
+  },
+  "status": 422,
+  "contentType": "application/json; charset=utf-8",
+  "resposta": {
+    "erro": {
+      "codigo": "DADOS_INVALIDOS",
+      "mensagem": "Existem campos inválidos no pedido.",
+      "campos": [
+        {
+          "campo": "cliente.nome",
+          "mensagem": "Informe nome e sobrenome."
+        },
+        {
+          "campo": "cliente.email",
+          "mensagem": "Informe um e-mail válido."
+        },
+        {
+          "campo": "cliente.cep",
+          "mensagem": "Informe um CEP com 8 dígitos."
+        }
+      ]
+    }
+  }
+}

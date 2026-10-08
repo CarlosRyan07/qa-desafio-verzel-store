@@ -1,0 +1,22 @@
+{
+  "name": "qa-desafio-verzel-store",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Validação do card VZS-142 da Verzel Store",
+  "scripts": {
+    "test": "playwright test",
+    "test:api": "playwright test --project=api",
+    "test:ui": "playwright test --project=ui",
+    "test:list": "playwright test --list",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit",
+    "check:links": "node scripts/verificar-links.mjs"
+  },
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "@types/node": "26.6.4",
+    "typescript": "7.0.2"
+  }
+}

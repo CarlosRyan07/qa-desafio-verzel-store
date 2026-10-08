@@ -1,0 +1,30 @@
+{
+  "executadoEm": "2026-10-08T21:53:04.422Z",
+  "ferramenta": "Playwright APIRequestContext",
+  "metodo": "POST",
+  "endpoint": "/api/pedidos",
+  "url": "https://verzel-store.qa-test-verzel-store.workers.dev/api/pedidos",
+  "requisicao": {
+    "cliente": {
+      "nome": "Maria Silva",
+      "email": "maria@example.com",
+      "cep": "01310-100"
+    },
+    "itens": [
+      {
+        "produtoId": "P005",
+        "quantidade": 1
+      }
+    ],
+    "cupom": "VERAO2026"
+  },
+  "status": 422,
+  "contentType": "application/json; charset=utf-8",
+  "resposta": {
+    "erro": {
+      "codigo": "CUPOM_EXPIRADO",
+      "mensagem": "Cupom expirado.",
+      "campo": "cupom"
+    }
+  }
+}

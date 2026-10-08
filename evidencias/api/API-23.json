@@ -1,0 +1,46 @@
+{
+  "executadoEm": "2026-10-08T21:52:56.999Z",
+  "ferramenta": "Playwright APIRequestContext",
+  "metodo": "POST",
+  "endpoint": "/api/carrinho/calcular",
+  "url": "https://verzel-store.qa-test-verzel-store.workers.dev/api/carrinho/calcular",
+  "requisicao": {
+    "itens": [
+      {
+        "produtoId": "P001",
+        "quantidade": 5
+      },
+      {
+        "produtoId": "P002",
+        "quantidade": 5
+      }
+    ]
+  },
+  "status": 200,
+  "contentType": "application/json; charset=utf-8",
+  "resposta": {
+    "itens": [
+      {
+        "produtoId": "P001",
+        "nome": "Camiseta Essencial",
+        "precoUnitario": 59.9,
+        "quantidade": 5,
+        "total": 299.5
+      },
+      {
+        "produtoId": "P002",
+        "nome": "Calça Jeans Slim",
+        "precoUnitario": 139.9,
+        "quantidade": 5,
+        "total": 699.5
+      }
+    ],
+    "subtotal": 999,
+    "desconto": 0,
+    "frete": 0,
+    "freteGratis": true,
+    "valorFaltanteFreteGratis": 0,
+    "total": 999,
+    "cupom": null
+  }
+}

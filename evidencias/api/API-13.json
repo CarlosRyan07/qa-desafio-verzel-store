@@ -1,0 +1,16 @@
+{
+  "executadoEm": "2026-10-08T21:52:54.453Z",
+  "ferramenta": "Playwright APIRequestContext",
+  "metodo": "GET",
+  "endpoint": "/api/produtos/NAO_EXISTE",
+  "url": "https://verzel-store.qa-test-verzel-store.workers.dev/api/produtos/NAO_EXISTE",
+  "requisicao": null,
+  "status": 404,
+  "contentType": "application/json; charset=utf-8",
+  "resposta": {
+    "erro": {
+      "codigo": "PRODUTO_NAO_ENCONTRADO",
+      "mensagem": "Produto NAO_EXISTE não encontrado."
+    }
+  }
+}

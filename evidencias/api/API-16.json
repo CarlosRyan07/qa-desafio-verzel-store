@@ -1,0 +1,19 @@
+{
+  "executadoEm": "2026-10-08T21:52:55.258Z",
+  "ferramenta": "Playwright APIRequestContext",
+  "metodo": "POST",
+  "endpoint": "/api/carrinho/calcular",
+  "url": "https://verzel-store.qa-test-verzel-store.workers.dev/api/carrinho/calcular",
+  "requisicao": {
+    "itens": []
+  },
+  "status": 422,
+  "contentType": "application/json; charset=utf-8",
+  "resposta": {
+    "erro": {
+      "codigo": "ITENS_OBRIGATORIOS",
+      "mensagem": "Informe ao menos um item.",
+      "campo": "itens"
+    }
+  }
+}

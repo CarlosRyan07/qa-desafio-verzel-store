@@ -1,0 +1,16 @@
+{
+  "executadoEm": "2026-10-08T21:52:54.718Z",
+  "ferramenta": "Playwright APIRequestContext",
+  "metodo": "GET",
+  "endpoint": "/api/rota-inexistente",
+  "url": "https://verzel-store.qa-test-verzel-store.workers.dev/api/rota-inexistente",
+  "requisicao": null,
+  "status": 404,
+  "contentType": "application/json; charset=utf-8",
+  "resposta": {
+    "erro": {
+      "codigo": "ROTA_NAO_ENCONTRADA",
+      "mensagem": "Rota não encontrada."
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "executadoEm": "2026-10-08T21:52:56.770Z",
+  "ferramenta": "Playwright APIRequestContext",
+  "metodo": "POST",
+  "endpoint": "/api/carrinho/calcular",
+  "url": "https://verzel-store.qa-test-verzel-store.workers.dev/api/carrinho/calcular",
+  "requisicao": "{",
+  "status": 400,
+  "contentType": "application/json; charset=utf-8",
+  "resposta": {
+    "erro": {
+      "codigo": "JSON_INVALIDO",
+      "mensagem": "O corpo da requisição deve ser um objeto JSON válido."
+    }
+  }
+}

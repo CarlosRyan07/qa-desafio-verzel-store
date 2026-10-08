@@ -1,0 +1,24 @@
+{
+  "executadoEm": "2026-10-08T21:52:55.789Z",
+  "ferramenta": "Playwright APIRequestContext",
+  "metodo": "POST",
+  "endpoint": "/api/carrinho/calcular",
+  "url": "https://verzel-store.qa-test-verzel-store.workers.dev/api/carrinho/calcular",
+  "requisicao": {
+    "itens": [
+      {
+        "produtoId": "NAO_EXISTE",
+        "quantidade": 1
+      }
+    ]
+  },
+  "status": 422,
+  "contentType": "application/json; charset=utf-8",
+  "resposta": {
+    "erro": {
+      "codigo": "PRODUTO_NAO_ENCONTRADO",
+      "mensagem": "Produto NAO_EXISTE não encontrado.",
+      "campo": "itens[0].produtoId"
+    }
+  }
+}

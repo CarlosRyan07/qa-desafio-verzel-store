@@ -1,0 +1,29 @@
+# Rastreabilidade
+
+Cada CT está descrito em [cenarios/](../cenarios/). O resultado e o observado por cenário estão em [execucao.md](execucao.md); as evidências são arquivos próprios listados em [evidencias.md](evidencias.md). As [verificações manuais](execucao-manual.md) têm seus limites de prova registrados separadamente.
+
+| Critério | Cenário | Automação | Resultado da rodada | Evidência principal | Bug / pendência |
+|---|---|---|---|---|---|
+| CA01 — 10% no subtotal | CT01, CT20 | API-02, UI-01, UI-09 | APROVADO | [API-02](../evidencias/api/API-02.json), [UI-01](../evidencias/ui/UI-01-cupom-aplicado.png), [UI-09](../evidencias/ui/UI-09-quantidade-recalculada.png) | [Manual](execucao-manual.md) |
+| CA02 — caixa/espaços | CT02 | API-03, UI-01 | APROVADO | [API-03](../evidencias/api/API-03.json) | [Manual parcial](execucao-manual.md) |
+| CA03 — cupom inexistente | CT03 | API-04, API-04P, UI-05 | APROVADO | [API-04](../evidencias/api/API-04.json), [UI-05](../evidencias/ui/UI-05-cupom-rejeitado.png) | [Manual parcial](execucao-manual.md) |
+| CA04 — cupom expirado | CT04 | API-05, API-05P, UI-06 | APROVADO | [API-05](../evidencias/api/API-05.json), [UI-06](../evidencias/ui/UI-06-cupom-rejeitado.png) | [Manual parcial](execucao-manual.md) |
+| CA05 — apenas um cupom | CT05 | UI-01 | APROVADO na remoção/reaplicação sem acúmulo e na tentativa posterior de cupom inválido; troca entre dois válidos não testável | [removido](../evidencias/ui/UI-01-cupom-removido.png), [reaplicado](../evidencias/ui/UI-01-cupom-reaplicado.png), [substituto rejeitado](../evidencias/ui/UI-01-cupom-substituto-rejeitado.png) | [Manual parcial](execucao-manual.md) |
+| CA06 — frete grátis ≥ R$ 200 | CT07, CT08 | API-07, API-08, API-24, UI-02 | REPROVADO em R$ 200; acima passou | [API-07](../evidencias/api/API-07.json), [UI-02](../evidencias/ui/UI-02-frete-limite.png) | [BUG-01](bugs.md#bug-01), [manual](execucao-manual.md) |
+| CA07 — abaixo do limite | CT06, CT24, CT26 | API-06, UI-13, UI-15 | APROVADO nas massas abaixo de R$ 200,00 e na transição de volta | [API-06](../evidencias/api/API-06.json), [UI-13](../evidencias/ui/UI-13-frete-abaixo-limite.png), [UI-15](../evidencias/ui/UI-15-frete-apos-diminuir.png) | [Manual em R$ 100,00](execucao-manual.md) |
+| CA08 — frete antes do desconto | CT08, CT25, CT26 | API-08, UI-14, UI-15 | APROVADO na API, interface e transição de quantidade com cupom | [API-08](../evidencias/api/API-08.json), [UI-14](../evidencias/ui/UI-14-frete-antes-desconto.png), [UI-15](../evidencias/ui/UI-15-frete-apos-aumentar.png) | [Manual](execucao-manual.md) |
+| CA09 — desconto sem frete | CT01, CT09, CT20 | API-02, UI-01, UI-09 | APROVADO | [API-02](../evidencias/api/API-02.json), [UI-09](../evidencias/ui/UI-09-quantidade-recalculada.png) | [Manual](execucao-manual.md) |
+| CA10 — máximo 5 por produto | CT11–CT14 | API-09, API-10, API-11, API-23, UI-03 | REPROVADO na API; UI passou | [API-10](../evidencias/api/API-10.json), [API-11](../evidencias/api/API-11.json), [UI-03](../evidencias/ui/UI-03-limite-cinco.png) | [BUG-02](bugs.md#bug-02), [manual](execucao-manual.md) |
+| CA11 — duas casas | CT08, CT10 | API-08 | APROVADO para massa disponível | [API-08](../evidencias/api/API-08.json) | Método de arredondamento com terceira casa não verificável |
+
+| Regra adicional | Cenário | Automação | Resultado | Evidência |
+|---|---|---|---|---|
+| Pedido válido, CEP nos dois formatos e carrinho vazio após confirmar | CT15 | API-12, API-32, UI-04 | APROVADO | [API-12](../evidencias/api/API-12-pedido.json), [API-32](../evidencias/api/API-32-pedido.json), [confirmação](../evidencias/ui/UI-04-pedido-confirmado.png), [carrinho vazio](../evidencias/ui/UI-04-carrinho-apos-pedido.png) |
+| Nome, e-mail e CEP inválidos | CT16, CT22, CT23 | API-21, API-28–API-30, UI-10–UI-12 | APROVADO juntos e isoladamente; checkout bloqueou campos vazios, e-mail e CEP inválidos; não cobre os nomes do CT19 | [API-21](../evidencias/api/API-21.json), [API-28](../evidencias/api/API-28.json), [API-29](../evidencias/api/API-29.json), [API-30](../evidencias/api/API-30.json), [UI-10](../evidencias/ui/UI-10-checkout-vazio.png), [UI-11](../evidencias/ui/UI-11-checkout-invalido.png), [UI-12](../evidencias/ui/UI-12-checkout-invalido.png) |
+| Nome sem nome e sobrenome válidos | CT19 | API-25, API-26, UI-07, UI-08 | REPROVADO na API e UI | [API-25](../evidencias/api/API-25.json), [API-26](../evidencias/api/API-26.json), [UI-07](../evidencias/ui/UI-07-nome-invalido-confirmacao.png), [UI-08](../evidencias/ui/UI-08-nome-invalido-confirmacao.png), [BUG-03](bugs.md#bug-03) |
+| Consulta versus carrinho com produto inexistente | CT17 | API-13, API-18 | APROVADO | [API-13](../evidencias/api/API-13.json), [API-18](../evidencias/api/API-18.json) |
+| Demais códigos de erro documentados | CT18 | API-14–API-20, API-22, API-31, API-33–API-36; API-04P/API-05P/API-10/API-11 | APROVADO, exceto QUANTIDADE_MAXIMA_EXCEDIDA | [índice](evidencias.md), [BUG-02](bugs.md#bug-02) |
+| Produto existente por ID | CT21 | API-27 | APROVADO para P005 | [API-27](../evidencias/api/API-27.json) |
+| Recálculo ao alterar quantidade com cupom | CT20 | UI-09 | APROVADO para P001 de 1→2→1 | [duas unidades](../evidencias/ui/UI-09-quantidade-dois.png), [uma unidade](../evidencias/ui/UI-09-quantidade-recalculada.png), [relatório](../evidencias/relatorio-playwright/index.html) |
+
+**Interpretação:** “APROVADO” indica a execução automatizada identificada. Os resultados manuais ficam em registro próprio e podem cobrir apenas parte do critério. CA06 e CA10 ficam reprovados mesmo que os caminhos vizinhos tenham passado; a falha é parte do critério. CT07 isola o limite de R$ 200,00 sem cupom; CT08 usa R$ 219,80 com cupom para verificar o CA08 sem confundir essa regra com o [BUG-01](bugs.md#bug-01). A [estratégia](estrategia.md#separação-das-regras-de-frete) explica a escolha das massas.
