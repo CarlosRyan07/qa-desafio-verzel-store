@@ -10,7 +10,7 @@ Os resultados são comparados com os [requisitos da tarefa (PDF)](docs/teste-tec
 
 ## 📌 Resultados
 
-**A entrega NÃO deve ser aprovada no estado atual.** Dos 11 critérios de aceite, 9 não apresentaram divergência nas massas verificadas e 2 foram reprovados (CA06 e CA10). A rodada atual executou **56 testes: 44 aprovados e 12 reprovados**. As falhas incluem dois critérios de aceite, a validação de e-mail e dois achados exploratórios de checkout.
+**A entrega NÃO deve ser aprovada no estado atual.** Dos 11 critérios de aceite, 9 não apresentaram divergência nas massas verificadas e 2 foram reprovados (CA06 e CA10). A rodada atual executou **65 testes: 53 aprovados e 12 reprovados**. As falhas incluem dois critérios de aceite, a validação de e-mail e dois achados exploratórios de checkout. As nove verificações de compatibilidade passaram em Chromium, Firefox, WebKit, Pixel 7 e iPhone 13.
 
 ### 🐞 Critérios de aceite reprovados
 
@@ -51,17 +51,18 @@ Testes de carga, estresse, segurança, login e pagamento não fazem parte desta 
 git clone https://github.com/CarlosRyan07/qa-desafio-verzel-store.git
 cd qa-desafio-verzel-store
 npm ci
-npx playwright install chromium
+npx playwright install chromium firefox webkit
 npm run typecheck
 npm test
 ```
 
-`npm ci` instala as versões fixadas no `package-lock.json`, e `npx playwright install chromium` instala o navegador usado nos testes de interface. A loja e a API já estão hospedadas; não é preciso iniciar um servidor local. `npm test` retorna código 1 enquanto os [bugs documentados](docs/bugs.md) persistirem.
+`npm ci` instala as versões fixadas no `package-lock.json`, e `npx playwright install chromium firefox webkit` instala os três motores usados nos testes de interface e compatibilidade. A loja e a API já estão hospedadas; não é preciso iniciar um servidor local. `npm test` retorna código 1 enquanto os [bugs documentados](docs/bugs.md) persistirem.
 
 | Comando | Resultado |
 |---|---|
 | `npm run test:api` | Executa apenas os testes de API. |
 | `npm run test:ui` | Executa apenas os testes de interface. |
+| `npm run test:compat` | Executa a matriz desktop e mobile de compatibilidade. |
 | `npx playwright test --ui` | Abre a interface do Playwright para selecionar e executar testes. |
 | `npm run report` | Abre o relatório da última execução local. |
 | `npx playwright show-report evidencias/relatorio-playwright` | Abre o [relatório da rodada atual](evidencias/relatorio-playwright/index.html). |
@@ -83,6 +84,7 @@ Para usar outro ambiente, defina `BASE_URL` antes da execução. Para atualizar 
 ├── tests/
 │   ├── api/                     Testes dos contratos e regras da API
 │   ├── ui/                      Testes no navegador
+│   ├── compatibilidade/         Fluxos em outros navegadores e dispositivos
 │   └── support/                 Massas e funções compartilhadas
 ├── scripts/                     Verificação dos links e registro exploratório
 ├── playwright.config.ts         Configuração da suíte
@@ -98,7 +100,7 @@ Os documentos principais têm acesso direto abaixo:
 | Resultado por cenário e rastreabilidade | [execucao.md](docs/execucao.md) · [rastreabilidade.md](docs/rastreabilidade.md) |
 | Verificações manuais e exploratórias | [execucao-manual.md](docs/execucao-manual.md) · [exploratorios.md](docs/exploratorios.md) |
 | Bugs e evidências | [bugs.md](docs/bugs.md) · [índice de evidências](docs/evidencias.md) |
-| Automação Playwright | [tests/api/](tests/api/) · [tests/ui/](tests/ui/) |
+| Automação Playwright | [tests/api/](tests/api/) · [tests/ui/](tests/ui/) · [tests/compatibilidade/](tests/compatibilidade/) |
 
 Os arquivos `.feature` documentam os cenários; a execução automatizada está nos testes Playwright em TypeScript. A [matriz de rastreabilidade](docs/rastreabilidade.md) liga cada critério às verificações e evidências correspondentes.
 
@@ -106,16 +108,19 @@ Os identificadores `CT` são usados para cenários ligados aos critérios e regr
 
 ## 🧪 O que foi automatizado
 
-A suíte usa Playwright Test com TypeScript e está dividida em dois projetos:
+A suíte usa Playwright Test com TypeScript e separa regras de negócio e compatibilidade:
 
 | Camada | Cobertura | Testes |
 |---|---|---|
 | API | Catálogo e preços; cupons; limites de frete e quantidade; cálculo e confirmação de pedido com CEP nos dois formatos; validação de cliente e contratos de erro, incluindo e-mail e nome nas massas exploratórias. | [39 testes](tests/api/) |
 | Interface | Cupom, frete e quantidade; checkout válido e inválido, incluindo nome nas massas exploratórias; carrinho vazio após pedido; consistência do total após falha simulada no cálculo. | [17 testes](tests/ui/) |
+| Compatibilidade desktop | Fluxo principal até o preenchimento do checkout em Chromium, Firefox e WebKit. | [3 execuções](tests/compatibilidade/fluxo.desktop.spec.ts) |
+| Compatibilidade mobile | Vitrine, carrinho, cupom, checkout, validações e ausência de rolagem horizontal em Pixel 7 e iPhone 13. | [6 execuções](tests/compatibilidade/fluxo.mobile.spec.ts) |
 
 ### Decisões da automação
 
-- Os projetos de API e interface podem rodar separadamente. Cada chamada de API envia sua própria massa, e cada teste de interface começa em um novo contexto de navegador.
+- Os projetos de API, interface e compatibilidade podem rodar separadamente. Cada chamada de API envia sua própria massa, e cada teste de interface começa em um novo contexto de navegador.
+- A matriz de compatibilidade repete apenas um fluxo crítico no desktop e três verificações no mobile. As regras de negócio completas permanecem concentradas nos projetos `api` e `ui`, evitando multiplicar a suíte inteira por cinco ambientes.
 - A organização usa auxiliares de página, uma aplicação enxuta da ideia de Page Object: ações e seletores recorrentes ficam em [loja.ts](tests/support/loja.ts), e chamadas da API em [api.ts](tests/support/api.ts). Os testes orientados a dados geram um teste Playwright independente para cada massa, como cupons rejeitados, contratos de erro e dados inválidos do checkout. As assertivas de negócio permanecem nos próprios testes.
 - A suíte usa um worker e não repete testes automaticamente. As assertivas seguem as regras documentadas; bugs conhecidos continuam aparecendo como falhas.
 - O Playwright guarda trace e screenshot quando um teste falha. Com `CAPTURE_EVIDENCE=1`, a execução também atualiza os JSONs e as capturas selecionadas em `evidencias/`.

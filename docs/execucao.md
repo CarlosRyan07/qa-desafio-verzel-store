@@ -1,14 +1,14 @@
 # Execução do VZS-142
 
-**Rodada automatizada consolidada:** 09/10/2026, aproximadamente 10h56–10h58 (America/Sao_Paulo, UTC−03:00).
+**Rodada automatizada consolidada:** 09/10/2026, aproximadamente 12h38–12h40 (America/Sao_Paulo, UTC−03:00).
 
-**Executor:** suíte Playwright Test 1.64.0, executada localmente com Node.js 24.18.0, npm 11.16.0, Chromium desktop (Playwright v1248) e `APIRequestContext`, Windows.
+**Executor:** suíte Playwright Test 1.64.0, executada localmente com Node.js 24.18.0, npm 11.16.0 e `APIRequestContext`, Windows. Interface em Chromium desktop; compatibilidade em Chromium, Firefox 157, WebKit 27.2, Pixel 7 e iPhone 13 emulados pelo Playwright.
 
 **Ambiente:** [Verzel Store](https://verzel-store.qa-test-verzel-store.workers.dev/), documentação v2.3.0.
 
 **Comando:** `$env:CAPTURE_EVIDENCE='1'; npm test`, um worker, sem retries.
 
-**Resultado:** 56 testes, 44 APROVADOS e 12 REPROVADOS; saída 1. O [relatório HTML desta rodada](../evidencias/relatorio-playwright/index.html) contém a execução detalhada e os traces das falhas. Quatro falhas são do BUG-03 exploratório, cuja interpretação esperada está declarada no relato.
+**Resultado:** 65 testes, 53 APROVADOS e 12 REPROVADOS; saída 1. O [relatório HTML desta rodada](../evidencias/relatorio-playwright/index.html) contém a execução detalhada e os traces das falhas. As nove execuções de compatibilidade passaram. Quatro falhas são do BUG-03 exploratório, cuja interpretação esperada está declarada no relato.
 
 A rodada desta página reúne os resultados dos testes Playwright. As [verificações manuais](execucao-manual.md) têm registro próprio e não entram na contagem da suíte.
 
@@ -42,6 +42,15 @@ A rodada desta página reúne os resultados dos testes Playwright. As [verifica�
 | CT26 | Frete recalcula ao cruzar R$ 200,00 com cupom nos dois sentidos | Subtotal 199,80 → 259,70 → 199,80; frete 19,90 → grátis → 19,90 | APROVADO (UI-15) | [antes](../evidencias/ui/UI-15-frete-antes-limite.png), [após aumentar](../evidencias/ui/UI-15-frete-apos-aumentar.png), [após diminuir](../evidencias/ui/UI-15-frete-apos-diminuir.png) |
 | CT27 | `qa@!!!!.com`: interface impede pedido e API retorna 422 para `cliente.email` | Interface confirmou o pedido; API retornou 201 e preservou o e-mail | REPROVADO (API-37, UI-16); [BUG-04](bugs.md#bug-04) | [API-37](../evidencias/api/API-37.json), [entrada](../evidencias/ui/UI-16-email-dominio-invalido-entrada.png), [resultado](../evidencias/ui/UI-16-email-dominio-invalido-resultado.png) |
 | EXP-02 | Se o cálculo falhar após aumentar P001 para duas unidades, bloquear checkout ou mostrar o valor atualizado antes de confirmar | Cálculo HTTP 500 simulado; checkout mostrou R$ 79,80, pedido real confirmou duas unidades por R$ 139,70 | REPROVADO (UI-17); exploratório [BUG-05](bugs.md#bug-05) | [carrinho](../evidencias/ui/UI-17-carrinho-apos-falha.png), [checkout](../evidencias/ui/UI-17-checkout-apos-falha.png), [confirmação](../evidencias/ui/UI-17-pedido-apos-falha.png) |
+
+## Compatibilidade
+
+| Verificação | Ambientes | Resultado | Evidência |
+|---|---|---|---|
+| COMP-01: adicionar produto, aplicar cupom, abrir e preencher checkout | Chromium, Firefox e WebKit desktop | 3 APROVADAS | [relatório atual](../evidencias/relatorio-playwright/index.html) |
+| MOB-01: vitrine, carrinho, controles e resumo sem rolagem horizontal | Pixel 7 (Chromium) e iPhone 13 (WebKit) | 2 APROVADAS | [relatório atual](../evidencias/relatorio-playwright/index.html) |
+| MOB-02: cupom, campos e botão do checkout acessíveis sem rolagem horizontal | Pixel 7 (Chromium) e iPhone 13 (WebKit) | 2 APROVADAS | [relatório atual](../evidencias/relatorio-playwright/index.html) |
+| MOB-03: mensagens de validação visíveis sem rolagem horizontal | Pixel 7 (Chromium) e iPhone 13 (WebKit) | 2 APROVADAS | [relatório atual](../evidencias/relatorio-playwright/index.html) |
 
 **Outras verificações:** API-01 confirmou os oito produtos e preços; API-27 confirmou a consulta de P005 pelo ID. Os cenários automatizados cobrem todos os CA01–CA11, mas CA11 tem limitação de massa descrita em [estrategia.md](estrategia.md). Não há percentuais de cobertura de código, pois o código da loja não está disponível.
 

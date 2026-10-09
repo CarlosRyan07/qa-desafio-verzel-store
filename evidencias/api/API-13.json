@@ -1,5 +1,5 @@
 {
-  "executadoEm": "2026-10-09T13:56:15.368Z",
+  "executadoEm": "2026-10-09T15:38:28.860Z",
   "ferramenta": "Playwright APIRequestContext",
   "metodo": "GET",
   "endpoint": "/api/produtos/NAO_EXISTE",

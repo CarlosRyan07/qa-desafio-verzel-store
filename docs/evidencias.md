@@ -4,7 +4,7 @@ As evidências listadas aqui correspondem à rodada atual, produzida no ambiente
 
 | Evidência | Conteúdo |
 |---|---|
-| [Relatório Playwright atual](../evidencias/relatorio-playwright/index.html) | 56 testes, 44 aprovados, 12 reprovados; anexos, capturas e traces. Abrir com `npx playwright show-report evidencias/relatorio-playwright`. |
+| [Relatório Playwright atual](../evidencias/relatorio-playwright/index.html) | 65 testes, 53 aprovados, 12 reprovados; inclui 9 execuções de compatibilidade aprovadas, anexos, capturas e traces. Abrir com `npx playwright show-report evidencias/relatorio-playwright`. |
 | [API-01 a API-12](../evidencias/api/) | Catálogo, cupom, bordas de frete, quantidade e consistência do pedido. Cada teste tem JSON de sua requisição/resposta; API-04P e API-05P são pedidos inválidos, API-12 tem cálculo e pedido separados. |
 | [API-13 a API-24](../evidencias/api/) | Contratos de erro, limite de quantidade e frete no limite. |
 | [API-25](../evidencias/api/API-25.json) e [API-26](../evidencias/api/API-26.json) | Pedidos aceitos com emojis ou símbolos no lugar de nome/sobrenome; [BUG-03 exploratório](bugs.md#bug-03). |

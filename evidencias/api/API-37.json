@@ -1,5 +1,5 @@
 {
-  "executadoEm": "2026-10-09T13:56:20.321Z",
+  "executadoEm": "2026-10-09T15:38:33.804Z",
   "ferramenta": "Playwright APIRequestContext",
   "metodo": "POST",
   "endpoint": "/api/pedidos",
@@ -20,8 +20,8 @@
   "status": 201,
   "contentType": "application/json; charset=utf-8",
   "resposta": {
-    "numero": "VZ-281309",
-    "criadoEm": "2026-10-09T13:56:20.242Z",
+    "numero": "VZ-153610",
+    "criadoEm": "2026-10-09T15:38:33.722Z",
     "cliente": {
       "nome": "Maria Silva",
       "email": "qa@!!!!.com",

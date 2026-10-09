@@ -15,5 +15,30 @@ export default defineConfig({
   projects: [
     { name: 'api', testMatch: /.*\.api\.spec\.ts/ },
     { name: 'ui', testMatch: /.*\.ui\.spec\.ts/, use: { ...devices['Desktop Chrome'] } },
+    {
+      name: 'compat-chromium',
+      testMatch: /.*\.desktop\.spec\.ts/,
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'compat-firefox',
+      testMatch: /.*\.desktop\.spec\.ts/,
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'compat-webkit',
+      testMatch: /.*\.desktop\.spec\.ts/,
+      use: { ...devices['Desktop Safari'] },
+    },
+    {
+      name: 'mobile-chrome',
+      testMatch: /.*\.mobile\.spec\.ts/,
+      use: { ...devices['Pixel 7'] },
+    },
+    {
+      name: 'mobile-safari',
+      testMatch: /.*\.mobile\.spec\.ts/,
+      use: { ...devices['iPhone 13'] },
+    },
   ],
 });
