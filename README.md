@@ -10,19 +10,32 @@ Os resultados são comparados com os [requisitos da tarefa (PDF)](docs/teste-tec
 
 ## 📌 Resultados
 
-**A entrega NÃO deve ser aprovada no estado atual.** Dos 11 critérios de aceite, 9 não apresentaram divergência nas massas verificadas e 2 foram reprovados (CA06 e CA10). A suíte executou **53 testes: 44 aprovados e 9 reprovados**, concentrados nos três bugs abaixo.
+**A entrega NÃO deve ser aprovada no estado atual.** Dos 11 critérios de aceite, 9 não apresentaram divergência nas massas verificadas e 2 foram reprovados (CA06 e CA10). A rodada atual executou **56 testes: 44 aprovados e 12 reprovados**. As falhas incluem dois critérios de aceite, a validação de e-mail e dois achados exploratórios de checkout.
 
-### 🐞 Bugs encontrados
+### 🐞 Critérios de aceite reprovados
 
 | Bug | Divergência observada | Impacto | Severidade |
 |---|---|---|---|
 | [BUG-01](docs/bugs.md#bug-01) | Com subtotal de **R$ 200,00**, a loja e a API cobram **R$ 19,90** de frete, embora a regra seja inclusiva. A tela ainda informa “Faltam R$ 0,00”. | Cobrança acima do valor anunciado. | 🔴 Alta |
 | [BUG-02](docs/bugs.md#bug-02) | A interface bloqueia a sexta unidade, mas a API calcula **seis unidades** e confirma o pedido. A regra limita cada produto a cinco. | Pedido fora do limite permitido. | 🔴 Alta |
-| [BUG-03](docs/bugs.md#bug-03) | Interface e API confirmam pedidos com emojis ou símbolos no lugar de nome e sobrenome válidos. | Dados de entrega fora da regra documentada. | 🟡 Média |
 
-Cada [relato de bug](docs/bugs.md) traz passos de reprodução, esperado, observado e evidências de interface e API. As [capturas manuais](docs/execucao-manual.md) têm seus resultados registrados separadamente. CA11 foi verificado com os valores disponíveis, que não permitem distinguir métodos de arredondamento.
+### 🔎 Achados adicionais
 
-**Para reavaliar a entrega:** corrigir os três bugs, repetir os cenários afetados na interface e na API e executar a suíte de regressão. A [rastreabilidade](docs/rastreabilidade.md) liga os critérios aos cenários e às evidências.
+| ID | Resultado observado | Classificação | Severidade |
+|---|---|---|---|
+| [BUG-03](docs/bugs.md#bug-03) | Interface e API confirmam pedidos com `😀 😃` ou `Jorge !@` no campo de nome. | Exploratório; ausência de nome/sobrenome identificáveis nessas massas | 🟡 Média |
+| [BUG-04](docs/bugs.md#bug-04) | Interface e API confirmam pedidos com `qa@!!!!.com`, apesar da exigência de e-mail válido. | Regra documentada de checkout | 🟡 Média |
+| [BUG-05](docs/bugs.md#bug-05) | Se o recálculo do carrinho falha, o checkout pode mostrar R$ 79,80 e confirmar um pedido de R$ 139,70. | Exploratório; falha HTTP 500 simulada apenas no cálculo | 🔴 Alta |
+
+Os [relatos de bug](docs/bugs.md) detalham as massas, os resultados, os impactos e as evidências de cada achado. As [capturas das verificações manuais](docs/execucao-manual.md) estão registradas separadamente.
+
+### 🔍 Investigações complementares
+
+- **Quantidade ausente:** cálculo e pedido são rejeitados com HTTP 422. A documentação não especifica qual código deve ser usado para esse campo ausente; [registro e análise](docs/exploratorios.md#quantidade-ausente-na-api).
+- **Cupom expirado restaurado:** após inserir o cupom na sessão, a interface o mostrou como aplicado, mas não deu desconto e o pedido foi recusado. É uma observação de estado simulado, detalhada [aqui](docs/exploratorios.md#verificação-complementar-cupom-expirado-restaurado).
+- **Arredondamento (CA11):** os valores disponíveis mostram duas casas decimais, mas não permitem distinguir métodos de arredondamento. [Limite da massa](docs/estrategia.md#ambiguidades-e-limites).
+
+**Para reavaliar a entrega:** corrigir os desvios confirmados, repetir os cenários afetados na interface e na API e executar a suíte de regressão. O BUG-05 exige também revisar o comportamento do checkout quando o cálculo falha. A [rastreabilidade](docs/rastreabilidade.md) liga os critérios aos cenários e às evidências.
 
 ## 🌐 Ambiente e API
 
@@ -51,10 +64,10 @@ npm test
 | `npm run test:ui` | Executa apenas os testes de interface. |
 | `npx playwright test --ui` | Abre a interface do Playwright para selecionar e executar testes. |
 | `npm run report` | Abre o relatório da última execução local. |
-| `npx playwright show-report evidencias/relatorio-playwright` | Abre a [rodada consolidada preservada](evidencias/relatorio-playwright/index.html). |
+| `npx playwright show-report evidencias/relatorio-playwright` | Abre o [relatório da rodada atual](evidencias/relatorio-playwright/index.html). |
 | `node scripts/registrar-cupom-restaurado.mjs` | Repete a verificação exploratória do cupom expirado restaurado e atualiza suas evidências. |
 
-Para usar outro ambiente, defina `BASE_URL` antes da execução. Para atualizar JSONs e capturas no PowerShell, rode `$env:CAPTURE_EVIDENCE='1'; npm test`; em bash, `CAPTURE_EVIDENCE=1 npm test`. A atualização sobrescreve evidências da rodada anterior, então revise os resultados antes de substituir o relatório preservado.
+Para usar outro ambiente, defina `BASE_URL` antes da execução. Para atualizar JSONs e capturas no PowerShell, rode `$env:CAPTURE_EVIDENCE='1'; npm test`; em bash, `CAPTURE_EVIDENCE=1 npm test`. Isso atualiza as evidências em `evidencias/api/` e `evidencias/ui/`. O HTML sai em `playwright-report/`; após revisar a rodada, atualize `evidencias/relatorio-playwright/`, que mantém somente o relatório mais recente.
 
 ## 🗂️ Estrutura do projeto
 
@@ -66,7 +79,7 @@ Para usar outro ambiente, defina `BASE_URL` antes da execução. Para atualizar 
 │   ├── ui/                      Capturas da automação
 │   ├── manuais/                 Capturas das verificações manuais
 │   ├── exploratorios/           Capturas das verificações exploratórias
-│   └── relatorio-playwright/    Relatório consolidado e traces
+│   └── relatorio-playwright/ Relatório da rodada atual e traces
 ├── tests/
 │   ├── api/                     Testes dos contratos e regras da API
 │   ├── ui/                      Testes no navegador
@@ -89,14 +102,16 @@ Os documentos principais têm acesso direto abaixo:
 
 Os arquivos `.feature` documentam os cenários; a execução automatizada está nos testes Playwright em TypeScript. A [matriz de rastreabilidade](docs/rastreabilidade.md) liga cada critério às verificações e evidências correspondentes.
 
+Os identificadores `CT` são usados para cenários ligados aos critérios e regras documentadas. `EXP` identifica verificações exploratórias sem critério de aceite direto; seus resultados ficam separados dos critérios formais na [execução](docs/execucao.md) e nos [relatos](docs/bugs.md).
+
 ## 🧪 O que foi automatizado
 
 A suíte usa Playwright Test com TypeScript e está dividida em dois projetos:
 
 | Camada | Cobertura | Testes |
 |---|---|---|
-| API | Catálogo e preços; cupons; limites de frete e quantidade; cálculo e confirmação de pedido com CEP nos dois formatos; validação de cliente e contratos de erro. | [38 testes](tests/api/) |
-| Interface | Aplicação, rejeição, remoção e reaplicação de cupom; recálculo do frete ao cruzar R$ 200; bloqueio da sexta unidade; checkout válido, campos vazios e dados inválidos; carrinho vazio após o pedido. | [15 testes](tests/ui/) |
+| API | Catálogo e preços; cupons; limites de frete e quantidade; cálculo e confirmação de pedido com CEP nos dois formatos; validação de cliente e contratos de erro, incluindo e-mail e nome nas massas exploratórias. | [39 testes](tests/api/) |
+| Interface | Cupom, frete e quantidade; checkout válido e inválido, incluindo nome nas massas exploratórias; carrinho vazio após pedido; consistência do total após falha simulada no cálculo. | [17 testes](tests/ui/) |
 
 ### Decisões da automação
 
@@ -120,6 +135,6 @@ Usei o **Codex (OpenAI)** como apoio na análise do desafio e na preparação da
 - Acompanhei e revisei cada etapa, pedindo ao Codex que explicasse o que estava fazendo e por que cada mudança era necessária. Quando uma conclusão não estava clara, voltei às regras e às evidências antes de mantê-la.
 - Fiz verificações manuais na loja e no Postman. As [capturas manuais](docs/execucao-manual.md) mostram o que foi observado; seus resultados estão separados da automação.
 - Separei o teste do limite exato de **R$ 200,00** do teste de frete antes do desconto: o primeiro reproduz o [BUG-01](docs/bugs.md#bug-01), enquanto o segundo usa subtotal de **R$ 219,80** e passa. A [estratégia](docs/estrategia.md#separação-das-regras-de-frete) explica por que essas massas permitem conclusões diferentes.
-- A automação foi executada contra a loja e a API reais. O [relatório preservado](evidencias/relatorio-playwright/index.html) reúne requisições, respostas, capturas e traces para conferir os resultados. Mantive as falhas dos bugs visíveis e registrei os [limites das massas disponíveis](docs/estrategia.md#ambiguidades-e-limites), como a existência de apenas um cupom válido documentado.
+- A automação foi executada contra a loja e a API reais. No teste exploratório UI-17, somente a resposta do cálculo foi simulada; a criação do pedido permaneceu real. O [relatório atual](evidencias/relatorio-playwright/index.html) reúne requisições, respostas, capturas e traces para conferir os resultados. Mantive as falhas dos bugs visíveis e registrei os [limites das massas disponíveis](docs/estrategia.md#ambiguidades-e-limites), como a existência de apenas um cupom válido documentado.
 
 Esse acompanhamento me deu agilidade para ampliar a cobertura, organizar as evidências e documentar as decisões. Os resultados e a decisão de aceite continuam vinculados às regras e às execuções registradas.

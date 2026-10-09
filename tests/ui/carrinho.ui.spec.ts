@@ -73,8 +73,8 @@ test('UI-04 checkout válido confirma pedido com valores calculados', async ({ p
 });
 
 for (const caso of [
-  { id: 'UI-07', nome: '😀 😃', descricao: 'nome composto apenas por emojis' },
-  { id: 'UI-08', nome: 'Jorge !@', descricao: 'sobrenome composto apenas por símbolos' },
+  { id: 'UI-07', nome: '😀 😃', descricao: 'nome formado apenas por emojis' },
+  { id: 'UI-08', nome: 'Jorge !@', descricao: 'segundo termo formado apenas por símbolos' },
 ]) {
   test(`${caso.id} checkout rejeita ${caso.descricao}`, async ({ page }) => {
     await page.goto('/');
@@ -88,7 +88,7 @@ for (const caso of [
       document.body.innerText.includes('Informe nome e sobrenome.') || /Pedido VZ-\d{6}/.test(document.body.innerText),
     );
     await captura(page, `${caso.id}-nome-invalido-confirmacao`);
-    await expect(page.getByText('Informe nome e sobrenome.')).toBeVisible({ timeout: 1000 });
+    await expect(page.getByText('Informe nome e sobrenome.')).toBeVisible();
     await expect(page).toHaveURL(/\/checkout$/);
     await expect(page.locator('main .confirmacao')).toHaveCount(0);
   });
@@ -134,6 +134,67 @@ for (const caso of [
     await captura(page, `${caso.id}-checkout-invalido`);
   });
 }
+
+test('UI-16 checkout rejeita e-mail com domínio inválido', async ({ page }) => {
+  await page.goto('/');
+  await adicionar(page, 'Camiseta Essencial');
+  await abrirCarrinho(page);
+  await abrirCheckout(page);
+  await preencherCheckout(page, { nome: 'Maria Silva', email: 'qa@!!!!.com', cep: '01310-100' });
+  await captura(page, 'UI-16-email-dominio-invalido-entrada');
+  await page.getByRole('button', { name: 'Confirmar pedido' }).click();
+  await page.waitForFunction(() =>
+    document.body.innerText.includes('Informe um e-mail válido.') || /Pedido VZ-\d{6}/.test(document.body.innerText),
+  );
+  await captura(page, 'UI-16-email-dominio-invalido-resultado');
+  await expect(page.getByText('Informe um e-mail válido.', { exact: true })).toBeVisible();
+  await expect(page).toHaveURL(/\/checkout$/);
+  await expect(page.locator('main .confirmacao')).toHaveCount(0);
+});
+
+test('UI-17 checkout não deve confirmar total diferente após falha no recálculo', async ({ page }) => {
+  await page.goto('/');
+  await adicionar(page, 'Camiseta Essencial');
+  await abrirCarrinho(page);
+  await expect(valorResumo(page, 'total')).toHaveText('R$ 79,80');
+  await page.route('**/api/carrinho/calcular', route => route.fulfill({
+    status: 500,
+    contentType: 'application/json',
+    body: JSON.stringify({ erro: { codigo: 'FALHA_SIMULADA', mensagem: 'Falha simulada no cálculo.' } }),
+  }));
+  const falha = page.waitForResponse(response => response.url().endsWith('/api/carrinho/calcular') && response.status() === 500);
+  await page.getByRole('button', { name: 'Aumentar quantidade de Camiseta Essencial' }).click();
+  await falha;
+  await captura(page, 'UI-17-carrinho-apos-falha');
+  const finalizar = page.getByRole('link', { name: 'Finalizar compra' });
+  if (!await finalizar.isVisible() || !await finalizar.isEnabled()) {
+    expect(await finalizar.isVisible() && await finalizar.isEnabled()).toBe(false);
+    return;
+  }
+
+  await abrirCheckout(page);
+  const totalExibido = await valorResumo(page, 'total').innerText();
+  await captura(page, 'UI-17-checkout-apos-falha');
+  await page.unroute('**/api/carrinho/calcular');
+  await preencherCheckout(page, { nome: 'Maria Silva', email: 'maria@example.com', cep: '01310-100' });
+  const respostaPedido = page.waitForResponse(response =>
+    new URL(response.url()).pathname === '/api/pedidos' && response.request().method() === 'POST',
+  );
+  await page.getByRole('button', { name: 'Confirmar pedido' }).click();
+  const resposta = await respostaPedido;
+  if (resposta.status() >= 400) {
+    await expect(page.locator('main .confirmacao')).toHaveCount(0);
+    return;
+  }
+  const pedido = await resposta.json();
+  await expect(page.locator('main .confirmacao')).toBeVisible();
+  await captura(page, 'UI-17-pedido-apos-falha');
+  expect(pedido.itens).toContainEqual(expect.objectContaining({ produtoId: 'P001', quantidade: 2 }));
+  const totalExibidoEmCentavos = Math.round(
+    Number(totalExibido.replace(/[^\d,]/g, '').replace(',', '.')) * 100,
+  );
+  expect(Math.round(pedido.total * 100)).toBe(totalExibidoEmCentavos);
+});
 
 test('UI-13 CA07 subtotal 199,90 cobra frete e informa faltante 0,10', async ({ page }) => {
   await page.goto('/');

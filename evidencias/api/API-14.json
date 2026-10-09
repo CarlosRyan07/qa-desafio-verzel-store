@@ -1,5 +1,5 @@
 {
-  "executadoEm": "2026-10-08T21:52:54.718Z",
+  "executadoEm": "2026-10-09T13:56:15.723Z",
   "ferramenta": "Playwright APIRequestContext",
   "metodo": "GET",
   "endpoint": "/api/rota-inexistente",

@@ -1,5 +1,5 @@
 {
-  "executadoEm": "2026-10-08T21:53:02.696Z",
+  "executadoEm": "2026-10-09T13:56:24.746Z",
   "ferramenta": "Playwright APIRequestContext",
   "metodo": "POST",
   "endpoint": "/api/carrinho/calcular",

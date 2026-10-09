@@ -8,7 +8,7 @@
 2. **Média:** mensagens de cupom, troca/remoção, validação de cliente e contrato de erro. A mensagem correta evita uma decisão errada do cliente e o contrato permite integração.
 3. **Exploratória:** transições no carrinho, atualização de quantidades, esvaziamento, segunda aba e fluxos de checkout. As verificações manuais realizadas estão em [execucao-manual.md](execucao-manual.md).
 
-Usei **partições de equivalência** para cupom válido, inexistente e expirado; **valores limite** para R$ 199,80 / R$ 199,90 / R$ 200,00 / R$ 219,80 e quantidades -1 / 0 / 1 / 5 / 6, além de quantidade fracionária, textual e nula; **tabela de decisão** para cupom com frete pago ou grátis; e **transição de estado** para aplicar/remover/reaplicar cupom e cruzar o limite do frete ao alterar quantidades. Os testes automatizados usam requisições reais e navegador real, um worker e contextos independentes.
+Usei **partições de equivalência** para cupom válido, inexistente e expirado; **valores limite** para R$ 199,80 / R$ 199,90 / R$ 200,00 / R$ 219,80 e quantidades -1 / 0 / 1 / 5 / 6, além de quantidade fracionária, textual, nula e ausente; **tabela de decisão** para cupom com frete pago ou grátis; e **transição de estado** para aplicar/remover/reaplicar cupom e cruzar o limite do frete ao alterar quantidades. Os testes automatizados usam navegador real, um worker e contextos independentes. No UI-17, somente a resposta do endpoint de cálculo é simulada como HTTP 500 para examinar a consistência do checkout; a requisição de pedido é real.
 
 ## Massas e oráculos
 
@@ -35,4 +35,6 @@ O [CT07](execucao.md) usa duas mochilas, subtotal exato de R$ 200,00 e nenhum cu
 - `GET /api/produtos/{id}` inexistente retorna 404; um item inexistente em `POST /api/carrinho/calcular` retorna 422. Esses contextos não são intercambiáveis.
 - O cálculo de cupom inválido/expirado retorna 200 com mensagem; o pedido retorna 422. A assimetria é explícita na documentação.
 - Há apenas um cupom válido documentado (`BEMVINDO10`) e nenhum contrato para cadastrar cupons neste ambiente. CA05 cobre remoção, reaplicação e tentativa posterior de cupom inválido sem desconto residual. A troca entre dois cupons válidos continua sem massa disponível.
+- A regra de nome completo não especifica caracteres permitidos. `😀 😃` e `Jorge !@` são massas exploratórias em que não há nome e sobrenome identificáveis; suas falhas estão visíveis na suíte, com a interpretação sujeita à validação do produto. Não se pressupõe que toda pontuação em nomes seja inválida. A rejeição de `Jorge` sem sobrenome também continua coberta.
+- Um item sem `quantidade` recebeu 422 `QUANTIDADE_INVALIDA` nos dois endpoints. Isso respeita a exigência de quantidade; a precedência entre `ITEM_INVALIDO` (item incompleto) e `QUANTIDADE_INVALIDA` (quantidade inválida) não está explícita para campo ausente.
 - Um carrinho por aba, pedidos fictícios, ausência de cobrança/e-mail e API sem persistência são comportamentos esperados. Carga, estresse e segurança estão fora do escopo do PDF.

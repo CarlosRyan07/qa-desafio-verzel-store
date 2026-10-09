@@ -1,5 +1,5 @@
 {
-  "executadoEm": "2026-10-08T21:53:00.482Z",
+  "executadoEm": "2026-10-09T13:56:19.576Z",
   "ferramenta": "Playwright APIRequestContext",
   "metodo": "POST",
   "endpoint": "/api/pedidos",

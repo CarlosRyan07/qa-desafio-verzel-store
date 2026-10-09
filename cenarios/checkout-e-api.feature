@@ -38,18 +38,33 @@ Funcionalidade: Checkout e contrato da API
       | E-mail | email-invalido | Informe um e-mail válido.       |
       | CEP    | 123            | Informe um CEP com 8 dígitos.   |
 
-  @CT19
-  Esquema do Cenário: Rejeitar nome sem nome e sobrenome válidos
+  @EXP-01
+  Esquema do Cenário: Rejeitar nome e sobrenome não identificáveis
     Dado um carrinho com 1 produto P001
     E um cliente com e-mail e CEP válidos, mas nome "<nome>"
     Quando confirmo o pedido pela interface ou pela API
     Então o pedido não deve ser criado
     E a interface deve informar "Informe nome e sobrenome."
-    E a API deve responder 422 DADOS_INVALIDOS
+    E a API deve responder 422 DADOS_INVALIDOS para cliente.nome
+    # Esperado exploratório para estas massas, sem generalizar a todos os nomes com símbolos.
     Exemplos:
       | nome     |
       | 😀 😃    |
       | Jorge !@ |
+
+  @CT27
+  Cenário: Rejeitar e-mail com caracteres inválidos no domínio
+    Dado um carrinho com P001 e os demais dados válidos
+    Quando informo qa@!!!!.com no checkout ou em POST /api/pedidos
+    Então a interface deve informar "Informe um e-mail válido." sem confirmar o pedido
+    E a API deve responder 422 DADOS_INVALIDOS para cliente.email
+
+  @EXP-02
+  Cenário: Não confirmar valor diferente do apresentado após falha no recálculo
+    Dado um carrinho com uma unidade de P001 e total R$ 79,80
+    Quando aumento a quantidade para duas unidades e o recálculo retorna 500
+    Então o checkout deve ser bloqueado ou atualizar o valor antes da confirmação
+    E um pedido confirmado deve ter total igual ao total exibido no checkout
 
   @CT17
   Cenário: Distinguir consulta de produto inexistente de item inexistente no carrinho

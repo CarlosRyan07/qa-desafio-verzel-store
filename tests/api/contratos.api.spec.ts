@@ -46,20 +46,6 @@ test('API-24 CA06 pedido com subtotal 200,00 mantém frete grátis', async ({ re
   expect(r.corpo).toMatchObject({ subtotal: 200, frete: 0, freteGratis: true, total: 200 });
 });
 
-for (const caso of [
-  { id: 'API-25', nome: '😀 😃', descricao: 'nome composto apenas por emojis' },
-  { id: 'API-26', nome: 'Jorge !@', descricao: 'sobrenome composto apenas por símbolos' },
-]) {
-  test(`${caso.id} ${caso.descricao} é rejeitado no pedido`, async ({ request }, info) => {
-    const r = await chamarApi(request, info, caso.id, 'POST', '/api/pedidos', {
-      cliente: { ...cliente, nome: caso.nome },
-      itens: [item('P001')],
-    });
-    expect(r.status).toBe(422);
-    expect(r.corpo).toMatchObject({ erro: { codigo: 'DADOS_INVALIDOS' } });
-  });
-}
-
 test('API-27 consulta produto existente pelo ID', async ({ request }, info) => {
   const r = await chamarApi(request, info, 'API-27', 'GET', '/api/produtos/P005');
   expect(r.status).toBe(200);
@@ -79,6 +65,31 @@ for (const caso of [
     expect(r.status).toBe(422);
     expect(r.corpo).toMatchObject({ erro: { codigo: 'DADOS_INVALIDOS' } });
     expect(r.corpo.erro.campos).toEqual([{ campo: caso.erro, mensagem: caso.mensagem }]);
+  });
+}
+
+test('API-37 rejeita e-mail com caracteres inválidos no domínio', async ({ request }, info) => {
+  const r = await chamarApi(request, info, 'API-37', 'POST', '/api/pedidos', {
+    cliente: { ...cliente, email: 'qa@!!!!.com' },
+    itens: [item('P001')],
+  });
+  expect(r.status).toBe(422);
+  expect(r.corpo).toMatchObject({ erro: { codigo: 'DADOS_INVALIDOS' } });
+  expect(r.corpo.erro.campos).toContainEqual({ campo: 'cliente.email', mensagem: 'Informe um e-mail válido.' });
+});
+
+for (const caso of [
+  { id: 'API-25', nome: '😀 😃', descricao: 'nome formado apenas por emojis' },
+  { id: 'API-26', nome: 'Jorge !@', descricao: 'segundo termo formado apenas por símbolos' },
+]) {
+  test(`${caso.id} rejeita ${caso.descricao}`, async ({ request }, info) => {
+    const r = await chamarApi(request, info, caso.id, 'POST', '/api/pedidos', {
+      cliente: { ...cliente, nome: caso.nome },
+      itens: [item('P001')],
+    });
+    expect(r.status).toBe(422);
+    expect(r.corpo).toMatchObject({ erro: { codigo: 'DADOS_INVALIDOS' } });
+    expect(r.corpo.erro.campos).toContainEqual({ campo: 'cliente.nome', mensagem: 'Informe nome e sobrenome.' });
   });
 }
 

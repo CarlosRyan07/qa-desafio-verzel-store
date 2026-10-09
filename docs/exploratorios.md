@@ -25,3 +25,15 @@ Para investigar o estado restaurado do carrinho, foi usada uma Camiseta Essencia
 **Evidência:** [requisições e respostas da API](../evidencias/exploratorios/cupom-expirado-respostas.json), [carrinho após recarga](../evidencias/exploratorios/cupom-expirado-carrinho.png) e [checkout recusado](../evidencias/exploratorios/cupom-expirado-checkout.png). O registro foi produzido por `node scripts/registrar-cupom-restaurado.mjs` e contém massa, esperado, observado, horário e ambiente; as imagens mostram a interface.
 
 **Limite:** o cupom expirado foi colocado na sessão pelo Console; não reproduzimos a expiração natural de um cupom previamente válido. Por isso, esta verificação permanece exploratória e fora da suíte principal e da lista de bugs prioritários. Nenhum desconto indevido ou pedido com cupom expirado foi confirmado.
+
+## Nomes com emojis e símbolos
+
+**Massa:** `😀 😃` e `Jorge !@`, com os demais dados do cliente válidos. A interface e a API confirmaram pedidos com ambos os valores. A [captura manual](../evidencias/manuais/nome-emoji-caracteres.png), os [registros API-25/26](../evidencias/api/) e as [capturas UI-07/08](../evidencias/ui/) comprovam o comportamento observado; os testes atuais registram a interpretação esperada como falha exploratória.
+
+**Interpretação:** a [documentação da loja](https://verzel-store.qa-test-verzel-store.workers.dev/documentacao) diz que o nome do cliente precisa ter nome e sobrenome. `😀 😃` não fornece nenhum dos dois; em `Jorge !@`, o segundo termo não identifica um sobrenome. A rejeição dessas massas é um esperado exploratório razoável, registrado como [BUG-03](bugs.md#bug-03), sujeito à validação da regra pelo responsável pelo produto. Isso não implica rejeitar todos os nomes que contenham pontuação ou emoji. A massa `Jorge` sem sobrenome foi rejeitada no [API-28](../evidencias/api/API-28.json).
+
+## Quantidade ausente na API
+
+**Massa:** `{"itens":[{"produtoId":"P001"}]}` enviada a `POST /api/carrinho/calcular` e `POST /api/pedidos` (com cliente válido no segundo caso). **Esperado mínimo:** rejeitar o item sem quantidade. **Observado:** ambos responderam 422 `QUANTIDADE_INVALIDA`, com campo `itens[0].quantidade`.
+
+O requisito de quantidade obrigatória foi respeitado. A tabela de erros da documentação descreve `ITEM_INVALIDO` para item incompleto e `QUANTIDADE_INVALIDA` para quantidade inválida; sem regra explícita de precedência para campo ausente, o código exato permanece uma **dúvida de contrato**, não um bug confirmado. [Requisições e respostas reais](../evidencias/exploratorios/quantidade-ausente.json) podem ser repetidas com `node scripts/registrar-quantidade-ausente.mjs`.

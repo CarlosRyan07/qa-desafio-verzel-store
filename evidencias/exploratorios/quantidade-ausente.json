@@ -1,0 +1,52 @@
+{
+  "executadoEm": "2026-10-09T11:47:30.211Z",
+  "executor": "Node.js fetch",
+  "ambiente": "https://verzel-store.qa-test-verzel-store.workers.dev",
+  "esperado": "Rejeição de item sem quantidade; código de erro específico a esclarecer na documentação.",
+  "observado": [
+    {
+      "rota": "/api/carrinho/calcular",
+      "metodo": "POST",
+      "requisicao": {
+        "itens": [
+          {
+            "produtoId": "P001"
+          }
+        ]
+      },
+      "status": 422,
+      "resposta": {
+        "erro": {
+          "codigo": "QUANTIDADE_INVALIDA",
+          "mensagem": "A quantidade deve ser um número inteiro maior ou igual a 1.",
+          "campo": "itens[0].quantidade"
+        }
+      }
+    },
+    {
+      "rota": "/api/pedidos",
+      "metodo": "POST",
+      "requisicao": {
+        "cliente": {
+          "nome": "Maria Silva",
+          "email": "maria@example.com",
+          "cep": "01310-100"
+        },
+        "itens": [
+          {
+            "produtoId": "P001"
+          }
+        ]
+      },
+      "status": 422,
+      "resposta": {
+        "erro": {
+          "codigo": "QUANTIDADE_INVALIDA",
+          "mensagem": "A quantidade deve ser um número inteiro maior ou igual a 1.",
+          "campo": "itens[0].quantidade"
+        }
+      }
+    }
+  ],
+  "resultado": "Rejeitado em ambos os endpoints; sem bug confirmado."
+}
