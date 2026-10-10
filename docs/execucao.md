@@ -1,6 +1,6 @@
 # Execução do VZS-142
 
-**Rodada automatizada consolidada:** 09/10/2026, aproximadamente 12h38–12h40 (America/Sao_Paulo, UTC−03:00).
+**Rodada automatizada consolidada:** 09/10/2026, aproximadamente 20h38–20h41 (America/Sao_Paulo, UTC−03:00).
 
 **Executor:** suíte Playwright Test 1.64.0, executada localmente com Node.js 24.18.0, npm 11.16.0 e `APIRequestContext`, Windows. Interface em Chromium desktop; compatibilidade em Chromium, Firefox 157, WebKit 27.2, Pixel 7 e iPhone 13 emulados pelo Playwright.
 
@@ -8,7 +8,7 @@
 
 **Comando:** `$env:CAPTURE_EVIDENCE='1'; npm test`, um worker, sem retries.
 
-**Resultado:** 65 testes, 53 APROVADOS e 12 REPROVADOS; saída 1. O [relatório HTML desta rodada](../evidencias/relatorio-playwright/index.html) contém a execução detalhada e os traces das falhas. As nove execuções de compatibilidade passaram. Quatro falhas são do BUG-03 exploratório, cuja interpretação esperada está declarada no relato.
+**Resultado:** 70 testes, 53 APROVADOS e 17 REPROVADOS; saída 1. O [relatório HTML desta rodada](../evidencias/relatorio-playwright/index.html) contém a execução detalhada e os traces das falhas. As nove execuções de compatibilidade passaram. Seis falhas são do BUG-03 exploratório, cuja interpretação esperada está declarada no relato.
 
 A rodada desta página reúne os resultados dos testes Playwright. As [verificações manuais](execucao-manual.md) têm registro próprio e não entram na contagem da suíte.
 

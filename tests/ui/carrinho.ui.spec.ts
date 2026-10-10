@@ -75,6 +75,7 @@ test('UI-04 checkout válido confirma pedido com valores calculados', async ({ p
 for (const caso of [
   { id: 'UI-07', nome: '😀 😃', descricao: 'nome formado apenas por emojis' },
   { id: 'UI-08', nome: 'Jorge !@', descricao: 'segundo termo formado apenas por símbolos' },
+  { id: 'UI-19', nome: '123 456', descricao: 'nome formado apenas por números' },
 ]) {
   test(`${caso.id} checkout rejeita ${caso.descricao}`, async ({ page }) => {
     await page.goto('/');
@@ -147,6 +148,23 @@ test('UI-16 checkout rejeita e-mail com domínio inválido', async ({ page }) =>
     document.body.innerText.includes('Informe um e-mail válido.') || /Pedido VZ-\d{6}/.test(document.body.innerText),
   );
   await captura(page, 'UI-16-email-dominio-invalido-resultado');
+  await expect(page.getByText('Informe um e-mail válido.', { exact: true })).toBeVisible();
+  await expect(page).toHaveURL(/\/checkout$/);
+  await expect(page.locator('main .confirmacao')).toHaveCount(0);
+});
+
+test('UI-18 checkout rejeita e-mail com pontos consecutivos no domínio', async ({ page }) => {
+  await page.goto('/');
+  await adicionar(page, 'Camiseta Essencial');
+  await abrirCarrinho(page);
+  await abrirCheckout(page);
+  await preencherCheckout(page, { nome: 'Maria Silva', email: 'maria@exemplo..com', cep: '01310-100' });
+  await captura(page, 'UI-18-email-pontos-consecutivos-entrada');
+  await page.getByRole('button', { name: 'Confirmar pedido' }).click();
+  await page.waitForFunction(() =>
+    document.body.innerText.includes('Informe um e-mail válido.') || /Pedido VZ-\d{6}/.test(document.body.innerText),
+  );
+  await captura(page, 'UI-18-email-pontos-consecutivos-resultado');
   await expect(page.getByText('Informe um e-mail válido.', { exact: true })).toBeVisible();
   await expect(page).toHaveURL(/\/checkout$/);
   await expect(page.locator('main .confirmacao')).toHaveCount(0);

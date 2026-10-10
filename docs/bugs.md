@@ -1,6 +1,6 @@
 # Bugs reproduzidos nesta execução
 
-Os relatos abaixo se baseiam em verificações próprias da [Verzel Store](https://verzel-store.qa-test-verzel-store.workers.dev/) pela interface e pela API. BUG-01/02 reprovam critérios de aceite; BUG-04 diverge da exigência documentada de e-mail válido; BUG-03/05 são achados exploratórios, com o limite de interpretação explicitado em cada relato. A classificação não presume causa interna.
+Os relatos abaixo se baseiam em verificações próprias da [Verzel Store](https://verzel-store.qa-test-verzel-store.workers.dev/) pela interface e pela API. BUG-01/02 reprovam critérios de aceite; BUG-04 e BUG-06 divergem de contratos documentados; BUG-03/05 são achados exploratórios, com o limite de interpretação explicitado em cada relato. A classificação não presume causa interna.
 
 ## BUG-01
 
@@ -42,7 +42,7 @@ Os relatos abaixo se baseiam em verificações próprias da [Verzel Store](https
 
 **Checkout e API confirmam pedidos sem nome e sobrenome identificáveis.** Achado **exploratório** de validação de cliente; severidade **média**.
 
-**Pré-condição:** carrinho com uma Camiseta Essencial (P001), e-mail e CEP válidos. **Passos:** informar `😀 😃` no campo Nome completo e confirmar; repetir com `Jorge !@`. Enviar as duas massas a `POST /api/pedidos` com os demais dados válidos.
+**Pré-condição:** carrinho com uma Camiseta Essencial (P001), e-mail e CEP válidos. **Passos:** informar `😀 😃` no campo Nome completo e confirmar; repetir com `Jorge !@` e `123 456`. Enviar as três massas a `POST /api/pedidos` com os demais dados válidos.
 
 **Esperado:** rejeitar essas duas massas, pois emojis isolados não formam nome e sobrenome, e `!@` isolado não identifica um sobrenome. Símbolos como `@`, `$`, `%` e `!` pertencem à mesma classe exploratória quando substituem uma parte inteira do nome; a massa `Jorge !@` é o representante executado dessa classe. A [documentação da loja](https://verzel-store.qa-test-verzel-store.workers.dev/documentacao) exige nome e sobrenome, mas **não define uma lista de caracteres proibidos**; este esperado é uma interpretação explícita da regra, a validar com o responsável pelo produto. O relato não propõe bloquear pontuação legítima em nomes, como hífen ou apóstrofo.
 
@@ -79,3 +79,17 @@ Os relatos abaixo se baseiam em verificações próprias da [Verzel Store](https
 **Impacto:** no cenário de indisponibilidade do cálculo, o valor confirmado pode superar o que foi mostrado ao cliente. A reprodução não demonstra que a API de cálculo falha espontaneamente em produção.
 
 **Evidências:** [carrinho após a falha](../evidencias/ui/UI-17-carrinho-apos-falha.png), [total no checkout](../evidencias/ui/UI-17-checkout-apos-falha.png), [pedido confirmado](../evidencias/ui/UI-17-pedido-apos-falha.png) e [trace do teste UI-17](../evidencias/relatorio-playwright/index.html). Cenário [EXP-02](../cenarios/checkout-e-api.feature).
+
+## BUG-06
+
+**API retorna PRODUTO_NAO_ENCONTRADO para item sem produtoId.** Contrato de erro documentado; severidade **baixa**.
+
+**Passos:** enviar POST /api/carrinho/calcular com {"itens":[{"quantidade":1}]}. Repetir em POST /api/pedidos com cliente valido.
+
+**Esperado:** HTTP 422 com ITEM_INVALIDO, pois o item nao contem produtoId e quantidade.
+
+**Observado:** ambos retornaram HTTP 422 com PRODUTO_NAO_ENCONTRADO, campo itens[0].produtoId e mensagem "Produto undefined nao encontrado."
+
+**Impacto:** clientes integrados recebem codigo e mensagem divergentes do contrato. A requisicao continua bloqueada.
+
+**Evidencia:** [API-38](../evidencias/api/API-38.json) e teste API-38 no [relatorio atual](../evidencias/relatorio-playwright/index.html).

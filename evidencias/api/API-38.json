@@ -1,5 +1,5 @@
 {
-  "executadoEm": "2026-10-10T00:40:30.860Z",
+  "executadoEm": "2026-10-10T00:40:29.092Z",
   "ferramenta": "Playwright APIRequestContext",
   "metodo": "POST",
   "endpoint": "/api/carrinho/calcular",
@@ -7,8 +7,7 @@
   "requisicao": {
     "itens": [
       {
-        "produtoId": "P005",
-        "quantidade": -1
+        "quantidade": 1
       }
     ]
   },
@@ -16,9 +15,9 @@
   "contentType": "application/json; charset=utf-8",
   "resposta": {
     "erro": {
-      "codigo": "QUANTIDADE_INVALIDA",
-      "mensagem": "A quantidade deve ser um número inteiro maior ou igual a 1.",
-      "campo": "itens[0].quantidade"
+      "codigo": "PRODUTO_NAO_ENCONTRADO",
+      "mensagem": "Produto undefined não encontrado.",
+      "campo": "itens[0].produtoId"
     }
   }
 }

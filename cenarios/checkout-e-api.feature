@@ -51,13 +51,18 @@ Funcionalidade: Checkout e contrato da API
       | nome     |
       | 😀 😃    |
       | Jorge !@ |
+      | 123 456  |
 
   @CT27
-  Cenário: Rejeitar e-mail com caracteres inválidos no domínio
+  Esquema do Cenário: Rejeitar e-mail com domínio inválido
     Dado um carrinho com P001 e os demais dados válidos
-    Quando informo qa@!!!!.com no checkout ou em POST /api/pedidos
+    Quando informo "<email>" no checkout ou em POST /api/pedidos
     Então a interface deve informar "Informe um e-mail válido." sem confirmar o pedido
     E a API deve responder 422 DADOS_INVALIDOS para cliente.email
+    Exemplos:
+      | email              |
+      | qa@!!!!.com        |
+      | maria@exemplo..com |
 
   @EXP-02
   Cenário: Não confirmar valor diferente do apresentado após falha no recálculo
@@ -93,6 +98,7 @@ Funcionalidade: Checkout e contrato da API
       | METODO_NAO_PERMITIDO  | GET    | /api/pedidos           | sem corpo                                                                   | 405    |
       | ITENS_OBRIGATORIOS    | POST   | /api/carrinho/calcular | {"itens":[]}                                                                | 422    |
       | ITEM_INVALIDO         | POST   | /api/carrinho/calcular | {"itens":[null]}                                                          | 422    |
+      | ITEM_INVALIDO         | POST   | /api/carrinho/calcular | {"itens":[{"quantidade":1}]}                                           | 422    |
       | ITEM_DUPLICADO        | POST   | /api/carrinho/calcular | {"itens":[{"produtoId":"P001","quantidade":1},{"produtoId":"P001","quantidade":1}]} | 422    |
       | QUANTIDADE_INVALIDA   | POST   | /api/carrinho/calcular | {"itens":[{"produtoId":"P001","quantidade":0}]}                          | 422    |
       | QUANTIDADE_INVALIDA   | POST   | /api/carrinho/calcular | {"itens":[{"produtoId":"P001","quantidade":1.5}]}                        | 422    |

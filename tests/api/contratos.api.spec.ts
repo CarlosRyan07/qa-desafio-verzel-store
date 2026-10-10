@@ -68,19 +68,25 @@ for (const caso of [
   });
 }
 
-test('API-37 rejeita e-mail com caracteres inválidos no domínio', async ({ request }, info) => {
-  const r = await chamarApi(request, info, 'API-37', 'POST', '/api/pedidos', {
-    cliente: { ...cliente, email: 'qa@!!!!.com' },
-    itens: [item('P001')],
+for (const caso of [
+  { id: 'API-37', email: 'qa@!!!!.com', descricao: 'caracteres inválidos no domínio' },
+  { id: 'API-39', email: 'maria@exemplo..com', descricao: 'pontos consecutivos no domínio' },
+]) {
+  test(`${caso.id} rejeita e-mail com ${caso.descricao}`, async ({ request }, info) => {
+    const r = await chamarApi(request, info, caso.id, 'POST', '/api/pedidos', {
+      cliente: { ...cliente, email: caso.email },
+      itens: [item('P001')],
+    });
+    expect(r.status).toBe(422);
+    expect(r.corpo).toMatchObject({ erro: { codigo: 'DADOS_INVALIDOS' } });
+    expect(r.corpo.erro.campos).toContainEqual({ campo: 'cliente.email', mensagem: 'Informe um e-mail válido.' });
   });
-  expect(r.status).toBe(422);
-  expect(r.corpo).toMatchObject({ erro: { codigo: 'DADOS_INVALIDOS' } });
-  expect(r.corpo.erro.campos).toContainEqual({ campo: 'cliente.email', mensagem: 'Informe um e-mail válido.' });
-});
+}
 
 for (const caso of [
   { id: 'API-25', nome: '😀 😃', descricao: 'nome formado apenas por emojis' },
   { id: 'API-26', nome: 'Jorge !@', descricao: 'segundo termo formado apenas por símbolos' },
+  { id: 'API-40', nome: '123 456', descricao: 'nome formado apenas por números' },
 ]) {
   test(`${caso.id} rejeita ${caso.descricao}`, async ({ request }, info) => {
     const r = await chamarApi(request, info, caso.id, 'POST', '/api/pedidos', {
@@ -92,6 +98,14 @@ for (const caso of [
     expect(r.corpo.erro.campos).toContainEqual({ campo: 'cliente.nome', mensagem: 'Informe nome e sobrenome.' });
   });
 }
+
+test('API-38 contrato rejeita item sem produtoId como ITEM_INVALIDO', async ({ request }, info) => {
+  const r = await chamarApi(request, info, 'API-38', 'POST', '/api/carrinho/calcular', { itens: [{ quantidade: 1 }] });
+  expect(r.status).toBe(422);
+  expect(r.corpo).toMatchObject({
+    erro: { codigo: 'ITEM_INVALIDO', campo: 'itens[0].produtoId', mensagem: expect.any(String) },
+  });
+});
 
 test('API-31 rejeita quantidade fracionária', async ({ request }, info) => {
   const r = await chamarApi(request, info, 'API-31', 'POST', '/api/carrinho/calcular', { itens: [item('P001', 1.5)] });
