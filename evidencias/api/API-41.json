@@ -1,32 +1,21 @@
 {
-  "executadoEm": "2026-10-10T14:09:36.290Z",
+  "executadoEm": "2026-10-10T14:09:46.024Z",
   "ferramenta": "Playwright APIRequestContext",
   "metodo": "POST",
-  "endpoint": "/api/pedidos",
-  "url": "https://verzel-store.qa-test-verzel-store.workers.dev/api/pedidos",
+  "endpoint": "/api/carrinho/calcular",
+  "url": "https://verzel-store.qa-test-verzel-store.workers.dev/api/carrinho/calcular",
   "requisicao": {
-    "cliente": {
-      "nome": "123 456",
-      "email": "maria@example.com",
-      "cep": "01310-100"
-    },
     "itens": [
       {
         "produtoId": "P001",
         "quantidade": 1
       }
-    ]
+    ],
+    "cupom": "   "
   },
-  "status": 201,
+  "status": 200,
   "contentType": "application/json; charset=utf-8",
   "resposta": {
-    "numero": "VZ-528042",
-    "criadoEm": "2026-10-10T14:09:35.868Z",
-    "cliente": {
-      "nome": "123 456",
-      "email": "maria@example.com",
-      "cep": "01310100"
-    },
     "itens": [
       {
         "produtoId": "P001",
@@ -42,6 +31,10 @@
     "freteGratis": false,
     "valorFaltanteFreteGratis": 140.1,
     "total": 79.8,
-    "cupom": null
+    "cupom": {
+      "codigo": "",
+      "aplicado": false,
+      "mensagem": "Cupom inválido."
+    }
   }
 }

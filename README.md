@@ -13,7 +13,7 @@ Os resultados são comparados com os [requisitos da tarefa (PDF)](docs/teste-tec
 
 ## 📌 Resultados
 
-**A entrega NÃO deve ser aprovada no estado atual.** Dos 11 critérios de aceite, 9 não apresentaram divergência nas massas verificadas e 2 foram reprovados (CA06 e CA10). A rodada atual executou **70 testes: 53 aprovados e 17 reprovados**. As falhas incluem dois critérios de aceite, a validação de e-mail, um contrato de erro e dois achados exploratórios de checkout. As nove verificações de compatibilidade passaram em Chromium, Firefox, WebKit, Pixel 7 e iPhone 13.
+**A entrega NÃO deve ser aprovada no estado atual.** Dos 11 critérios de aceite, 9 não apresentaram divergência nas massas verificadas e 2 foram reprovados (CA06 e CA10). A rodada atual executou **73 testes: 54 aprovados e 19 reprovados**. As falhas incluem dois critérios de aceite, a validação de e-mail, um contrato de erro e dois achados exploratórios de checkout. As nove verificações de compatibilidade passaram em Chromium, Firefox, WebKit, Pixel 7 e iPhone 13.
 
 ### 🐞 Critérios de aceite reprovados
 
@@ -30,6 +30,7 @@ Os resultados são comparados com os [requisitos da tarefa (PDF)](docs/teste-tec
 | [BUG-04](docs/bugs.md#bug-04) | Interface e API confirmam pedidos com `qa@!!!!.com` ou `maria@exemplo..com`, apesar da exigência de e-mail válido. | Regra documentada de checkout | 🟡 Média |
 | [BUG-05](docs/bugs.md#bug-05) | Se o recálculo do carrinho falha, o checkout pode mostrar R$ 79,80 e confirmar um pedido de R$ 139,70. | Exploratório; falha HTTP 500 simulada apenas no cálculo | 🔴 Alta |
 | [BUG-06](docs/bugs.md#bug-06) | Item sem `produtoId` recebe `PRODUTO_NAO_ENCONTRADO` em vez de `ITEM_INVALIDO`. | Contrato de erro documentado | 🟢 Baixa |
+| [BUG-07](docs/bugs.md#bug-07) | API rejeita pedido com cupom composto apenas por espaços, embora o CA02 determine que os espaços sejam ignorados. | Critério CA02; divergência restrita à API | 🟢 Baixa |
 
 Os [relatos de bug](docs/bugs.md) detalham as massas, os resultados, os impactos e as evidências de cada achado. As [capturas das verificações manuais](docs/execucao-manual.md) estão registradas separadamente.
 

@@ -4,7 +4,7 @@ As evidências listadas aqui correspondem à rodada atual, produzida no ambiente
 
 | Evidência | Conteúdo |
 |---|---|
-| [Relatório Playwright atual](../evidencias/relatorio-playwright/index.html) | 70 testes, 53 aprovados, 17 reprovados; inclui 9 execuções de compatibilidade aprovadas, anexos, capturas e traces. Abrir com `npx playwright show-report evidencias/relatorio-playwright`. |
+| [Relatório Playwright atual](../evidencias/relatorio-playwright/index.html) | 73 testes, 54 aprovados, 19 reprovados; inclui 9 execuções de compatibilidade aprovadas, anexos, capturas e traces. Abrir com `npx playwright show-report evidencias/relatorio-playwright`. |
 | [API-01 a API-12](../evidencias/api/) | Catálogo, cupom, bordas de frete, quantidade e consistência do pedido. Cada teste tem JSON de sua requisição/resposta; API-04P e API-05P são pedidos inválidos, API-12 tem cálculo e pedido separados. |
 | [API-13 a API-24](../evidencias/api/) | Contratos de erro, limite de quantidade e frete no limite. |
 | [API-25](../evidencias/api/API-25.json) e [API-26](../evidencias/api/API-26.json) | Pedidos aceitos com emojis ou símbolos no lugar de nome/sobrenome; [BUG-03 exploratório](bugs.md#bug-03). |
@@ -33,3 +33,4 @@ As evidências listadas aqui correspondem à rodada atual, produzida no ambiente
 **Como reproduzir:** `npm ci`, `npm test`. Para atualizar os arquivos de `evidencias/api` e `evidencias/ui`, rode `$env:CAPTURE_EVIDENCE='1'; npm test` no PowerShell. Para repetir as investigações independentes, execute `node scripts/registrar-cupom-restaurado.mjs` ou `node scripts/registrar-quantidade-ausente.mjs`. O relatório HTML de nova execução sai em `playwright-report/`; depois de conferir a rodada, atualize `evidencias/relatorio-playwright/`, mantendo ali somente a versão mais recente. A suíte retorna código 1 enquanto os bugs reproduzidos persistirem.
 
 **Sobre as imagens:** as capturas manuais foram preservadas como recebidas, incluindo montagens e recortes. As capturas automatizadas foram produzidas pelo Playwright.
+| [API-41](../evidencias/api/API-41.json), [API-42](../evidencias/api/API-42.json) e [UI-20](../evidencias/ui/UI-20-cupom-espacos.png) | Cupom com apenas espaços é tratado como inválido pela API, mas como vazio pela interface; [BUG-07](bugs.md#bug-07). |

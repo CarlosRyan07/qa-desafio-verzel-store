@@ -91,3 +91,19 @@ test('API-12 pedido válido confirma os mesmos valores do cálculo', async ({ re
   }
   expect(pedido.corpo).toMatchObject({ subtotal: 100, desconto: 10, frete: 19.9, total: 109.9 });
 });
+
+test('API-41 CA02 cálculo trata cupom só com espaços como ausência de cupom', async ({ request }, info) => {
+  const r = await chamarApi(request, info, 'API-41', 'POST', '/api/carrinho/calcular', {
+    itens: [item('P001')], cupom: '   ',
+  });
+  expect(r.status).toBe(200);
+  expect(r.corpo).toMatchObject({ desconto: 0, frete: 19.9, total: 79.8, cupom: null });
+});
+
+test('API-42 CA02 pedido aceita cupom só com espaços como ausência de cupom', async ({ request }, info) => {
+  const r = await chamarApi(request, info, 'API-42', 'POST', '/api/pedidos', {
+    cliente, itens: [item('P001')], cupom: '   ',
+  });
+  expect(r.status).toBe(201);
+  expect(r.corpo).toMatchObject({ cupom: null, subtotal: 59.9, desconto: 0, frete: 19.9, total: 79.8 });
+});

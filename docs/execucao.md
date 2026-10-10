@@ -8,7 +8,7 @@
 
 **Comando:** `$env:CAPTURE_EVIDENCE='1'; npm test`, um worker, sem retries.
 
-**Resultado:** 70 testes, 53 APROVADOS e 17 REPROVADOS; saída 1. O [relatório HTML desta rodada](../evidencias/relatorio-playwright/index.html) contém a execução detalhada e os traces das falhas. As nove execuções de compatibilidade passaram. Seis falhas são do BUG-03 exploratório, cuja interpretação esperada está declarada no relato.
+**Resultado:** 73 testes, 54 APROVADOS e 19 REPROVADOS; saída 1. O [relatório HTML desta rodada](../evidencias/relatorio-playwright/index.html) contém a execução detalhada e os traces das falhas. As nove execuções de compatibilidade passaram. Seis falhas são do BUG-03 exploratório, cuja interpretação esperada está declarada no relato.
 
 A rodada desta página reúne os resultados dos testes Playwright. As [verificações manuais](execucao-manual.md) têm registro próprio e não entram na contagem da suíte.
 
@@ -55,3 +55,4 @@ A rodada desta página reúne os resultados dos testes Playwright. As [verifica�
 **Outras verificações:** API-01 confirmou os oito produtos e preços; API-27 confirmou a consulta de P005 pelo ID. Os cenários automatizados cobrem todos os CA01–CA11, mas CA11 tem limitação de massa descrita em [estrategia.md](estrategia.md). Não há percentuais de cobertura de código, pois o código da loja não está disponível.
 
 **Execução manual:** as verificações que registrei estão em [execucao-manual.md](execucao-manual.md). A remoção do cupom e o checkout válido já têm resultado automatizado nesta rodada.
+| CT28 | Cupom com apenas espaços deve equivaler a campo vazio | Interface exibiu “Informe um cupom.”; cálculo respondeu cupom inválido e pedido retornou 422 | REPROVADO na API (API-41, API-42); interface aprovada (UI-20); BUG-07 | [API-41](../evidencias/api/API-41.json), [API-42](../evidencias/api/API-42.json), [UI-20](../evidencias/ui/UI-20-cupom-espacos.png) |

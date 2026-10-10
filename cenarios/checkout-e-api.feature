@@ -106,3 +106,10 @@ Funcionalidade: Checkout e contrato da API
       | QUANTIDADE_INVALIDA   | POST   | /api/carrinho/calcular | {"itens":[{"produtoId":"P005","quantidade":"2"}]}                        | 422    |
       | QUANTIDADE_INVALIDA   | POST   | /api/carrinho/calcular | {"itens":[{"produtoId":"P005","quantidade":null}]}                       | 422    |
       | ITENS_OBRIGATORIOS    | POST   | /api/carrinho/calcular | {}                                                                          | 422    |
+
+  @CT28
+  Cenário: Espaços que resultam em cupom vazio são ignorados também pela API
+    Dado um carrinho com 1 produto P001
+    Quando envio o campo cupom com apenas espaços ao cálculo e ao pedido
+    Então o cálculo deve responder sem cupom aplicado
+    E o pedido deve ser confirmado como se o campo cupom estivesse vazio

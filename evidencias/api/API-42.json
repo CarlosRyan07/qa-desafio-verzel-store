@@ -1,5 +1,5 @@
 {
-  "executadoEm": "2026-10-10T14:09:41.288Z",
+  "executadoEm": "2026-10-10T14:09:46.947Z",
   "ferramenta": "Playwright APIRequestContext",
   "metodo": "POST",
   "endpoint": "/api/pedidos",
@@ -12,11 +12,11 @@
     },
     "itens": [
       {
-        "produtoId": "P005",
+        "produtoId": "P001",
         "quantidade": 1
       }
     ],
-    "cupom": "INEXISTENTE"
+    "cupom": "   "
   },
   "status": 422,
   "contentType": "application/json; charset=utf-8",

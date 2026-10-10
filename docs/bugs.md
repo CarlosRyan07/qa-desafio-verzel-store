@@ -93,3 +93,17 @@ Os relatos abaixo se baseiam em verificações próprias da [Verzel Store](https
 **Impacto:** clientes integrados recebem codigo e mensagem divergentes do contrato. A requisicao continua bloqueada.
 
 **Evidencia:** [API-38](../evidencias/api/API-38.json) e teste API-38 no [relatorio atual](../evidencias/relatorio-playwright/index.html).
+
+## BUG-07
+
+**API não trata cupom composto apenas por espaços como valor vazio.** Critério CA02; severidade **baixa**; prioridade sugerida **baixa**.
+
+**Massa executada:** uma Camiseta Essencial (P001) e `cupom: "   "` em `POST /api/carrinho/calcular` e `POST /api/pedidos`. Como controle, o mesmo corpo com `cupom: ""` retorna cálculo sem cupom e pedido criado.
+
+**Esperado:** após ignorar os espaços externos, o campo fica vazio. O cálculo deve retornar `cupom: null` e o pedido deve responder 201 sem cupom, tal como ocorre com o valor vazio.
+
+**Observado:** o cálculo retorna 200, mas informa `cupom.aplicado: false` com “Cupom inválido.”; o pedido retorna 422 `CUPOM_INVALIDO`. A interface, por sua vez, mostra “Informe um cupom.”, comportamento compatível com campo vazio.
+
+**Impacto:** clientes que chamam a API diretamente recebem respostas diferentes para entradas equivalentes após a normalização definida pelo CA02. A confirmação de pedido é bloqueada desnecessariamente.
+
+**Evidências:** [cálculo](../evidencias/api/API-41.json), [pedido](../evidencias/api/API-42.json), [interface](../evidencias/ui/UI-20-cupom-espacos.png) e relatório da rodada atual.

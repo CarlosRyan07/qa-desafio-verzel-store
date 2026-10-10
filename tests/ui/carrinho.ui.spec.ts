@@ -301,3 +301,14 @@ for (const caso of [
     await captura(page, `${caso.id}-cupom-rejeitado`);
   });
 }
+
+test('UI-20 CA02 cupom só com espaços é tratado como campo vazio', async ({ page }) => {
+  await page.goto('/');
+  await adicionar(page, 'Camiseta Essencial');
+  await abrirCarrinho(page);
+  await aplicarCupom(page, '   ');
+  await expect(page.getByText('Informe um cupom.', { exact: true })).toBeVisible();
+  await expect(page.getByText('Cupom inválido.', { exact: true })).toHaveCount(0);
+  await expect(valorResumo(page, 'desconto')).toHaveText('R$ 0,00');
+  await captura(page, 'UI-20-cupom-espacos');
+});
