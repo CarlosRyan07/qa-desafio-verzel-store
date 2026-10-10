@@ -2,6 +2,9 @@
 
 [![Automação: Playwright](https://img.shields.io/badge/automacao-Playwright-2EA44F)](tests/) [![Linguagem: TypeScript](https://img.shields.io/badge/linguagem-TypeScript-3178C6)](tsconfig.json) [![Node: 20+](https://img.shields.io/badge/node-20%2B-2EA44F)](package.json) [![Cenários: Gherkin](https://img.shields.io/badge/cenarios-Gherkin-F59E0B)](cenarios/) [![Validação: API](https://img.shields.io/badge/validacao-API-1677C7)](tests/api/)
 
+> **Desafio técnico para a vaga de QA Júnior na Verzel.**
+> Validação da entrega VZS-142 da Verzel Store, versão 2.3.0.
+
 ## 🎯 Objetivo
 
 Validar a entrega de cupom de desconto e frete grátis do time de desenvolvimento, verificando as regras de negócio no carrinho, no checkout e na API. A avaliação reúne cenários funcionais, verificações manuais e exploratórias, automação e evidências para orientar a decisão de aceite.
